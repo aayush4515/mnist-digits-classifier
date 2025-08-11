@@ -22,7 +22,7 @@ def sigmoid(arr):
     return 1 / (1 + np.exp(-1 * arr))
 
 # prepare data for training
-def prepare_data():
+def prepare_data() -> None:
     # load 1000 training data from a dataset of 60000 mnist numbers
     # each data in X is 28*28 pixels, a total of 784 numbers ranging from 0 to 255
     training_data = x_train[:1000]
@@ -49,7 +49,7 @@ def prepare_data():
     will be initialized with 0
     '''
 
-    # array for feed forwarding, dimension: 10 * 784
+    # array for feed forwarding, dimension: 10 * 1000
     y = []
     for label in labels:
         arr = [0] * n[3]
@@ -59,7 +59,7 @@ def prepare_data():
     # convert into a numpy array
     Y = np.array(y)
 
-    return A0, Y
+    return A0, Y.T
 
 # feed forward calculation: returns y_hat -> prediction of the model
 def feed_forward(A0):
@@ -84,7 +84,18 @@ def feed_forward(A0):
 A0, Y = prepare_data()
 y_hat = feed_forward(A0)
 
-# TODO: implement backpropagation
-def backpropagation():
-    pass
+# function to calculate cost of each node across all training data: returns a float value
+def cost(y_hat, y) -> float:
+    # use the binary cross entropy loss function
+    losses = - ( (y * np.log(y_hat)) + (1 - y) * np.log(1 - y_hat) )
 
+    # get the length of y_hat (output array)
+    m = y_hat.reshape(-1).shape[0]
+
+    # sum across all cols (each training data) and average by m data, returns a 784 * 1 matrix
+    summed_losses = (1 / m) * np.sum(losses, axis=0)
+
+    # now sum across all the training data
+    return np.sum(summed_losses)
+
+print(f"Current cost: {cost(y_hat, Y)}")
