@@ -17,14 +17,19 @@ b1 = np.random.randn(n[1], 1)
 b2 = np.random.randn(n[2], 1)
 b3 = np.random.randn(n[3], 1)
 
+# sigmoid function: squeezes each activations to a real number between 0 and 1
+def sigmoid(arr):
+    return 1 / (1 + np.exp(-1 * arr))
+
 # prepare data for training
 def prepare_data():
     # load 1000 training data from a dataset of 60000 mnist numbers
     # each data in X is 28*28 pixels, a total of 784 numbers ranging from 0 to 255
     training_data = x_train[:1000]
 
-    # for each of the digit in training data, convert it into single vector and add into a matrix
-    X = np.array([np.array(img).flatten() for img in training_data])        # shape: 1000 * 784
+    # for each of the digit in training data, convert it into single vector of 784 pixels and add into a matrix
+    # each pixel is converted into a number between 0.0 and 1.0 by dividing by 255.0
+    X = np.array([np.array(img).flatten() for img in training_data], dtype=np.float32) / 255.0       # shape: 1000 * 784
 
     # transpose X to convert to 784 * 1000 matrix, this is the 0th layer called A0
     A0 = X.T
@@ -56,10 +61,6 @@ def prepare_data():
 
     return A0, Y
 
-# sigmoid function: squeezes each activations to a real number between 0 and 1
-def sigmoid(arr):
-    return 1 / (1 + np.exp(-1 * arr))
-
 # feed forward calculation: returns y_hat -> prediction of the model
 def feed_forward(A0):
     # layer 1 calculations
@@ -82,4 +83,8 @@ def feed_forward(A0):
 # prepare data and feed forward
 A0, Y = prepare_data()
 y_hat = feed_forward(A0)
+
+# TODO: implement backpropagation
+def backpropagation():
+    pass
 
